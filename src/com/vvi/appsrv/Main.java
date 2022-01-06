@@ -1,15 +1,12 @@
 package com.vvi.appsrv;
 
-import com.google.gson.JsonObject;
-import com.vvi.appsrv.api.ServerAPI;
-import jdk.internal.dynalink.beans.StaticClass;
-
 import java.sql.*;
 
 public class Main {
 
     private static String hostname="localhost";
-    private static int port=3306;
+    private static int databasePort =3306;
+    private static int serverPort=25565;
     private static String databaseName="appdatabase";
     private static String username="root";
     private static String password="VeryGoodBird2005";
@@ -17,12 +14,13 @@ public class Main {
     public static Statement statement;
     public static void main(String args[]){
         try {
-            final String url = "jdbc:mysql://" + hostname + ":" + port + "/" + databaseName;
+            final String url = "jdbc:mysql://" + hostname + ":" + databasePort + "/" + databaseName;
             connection = DriverManager.getConnection(url, username, password);
             statement=connection.createStatement();
-
-            statement.close();
-            connection.close();
+            Server serverInstance = new Server(serverPort);
+            serverInstance.startServer();
+            //statement.close();
+            //connection.close();
         }
         catch (SQLException e) {
             System.out.println("Error using MySQL database" + e.getMessage());
